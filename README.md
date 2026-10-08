@@ -2,7 +2,7 @@
 
 Assistente de IA para **Magic: The Gathering** que responde perguntas usando RAG (*Retrieval-Augmented Generation*) sobre dados da API oficial do Magic, com interface em Streamlit.
 
-> 🚧 Projeto em desenvolvimento. Por enquanto, o `main.py` é apenas uma página de teste do Streamlit.
+> 🚧 Projeto em desenvolvimento.
 
 ## Ideia do projeto
 
