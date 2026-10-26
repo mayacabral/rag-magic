@@ -14,13 +14,12 @@ agenteIA/
 └── main.py       # Streamlit: importa e chama as funções direto
 """
 
-from flask import Blueprint, jsonify
-from dotenv import load_dotenv
+from flask import Blueprint, Flask, jsonify
 import gzip, json
 import requests
 
 
-load_dotenv()
+app = Flask(__name__)
 
 URL = 'https://api.scryfall.com'
 
@@ -28,3 +27,39 @@ HEADERS = {
     'User-Agent': 'agenteIa',
     'Accept': 'application/json;q=0.9,*/*;q=0.8'
 }
+
+scryfall_bp = Blueprint("scryfall", __name__)
+
+@scryfall_bp.route("/catalogo/card-names", methods=["GET"])
+def listar_nomes_cartas():
+    endpoint = f"{URL}/catalog/card-names"
+
+    try:
+        response = requests.get(
+            endpoint,
+            headers=HEADERS,
+            timeout=30
+        )
+        response.raise_for_status()
+
+        dados = response.json()
+
+        return jsonify(dados), 200
+
+    except requests.exceptions.RequestException as erro:
+        return jsonify({
+            "erro": "Não foi possível consultar a Scryfall API.",
+            "detalhes": str(erro)
+        }), 502
+
+
+
+
+app.register_blueprint(scryfall_bp)
+
+if __name__ == "__main__":
+    print("Rotas registradas:")
+    print(app.url_map)
+
+    app.run(debug=True)
+
